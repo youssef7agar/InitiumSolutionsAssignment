@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">InitiumSolutionsAssignment</string>
+    <string name="you_can_book_an_appointment_to_any_of_the_following_entities">You can book an appointment to any of the following entities</string>
+    <string name="select_entity_to_continue">Select entity to continue</string>
+    <string name="don_t_have_an_account_yet">Don’t have an account yet?</string>
+    <string name="register_now">Register now</string>
+    <string name="login_to_your_account">Login to your account</string>
+    <string name="menu">menu</string>
+    <string name="customer_service">customer service</string>
+</resources>
