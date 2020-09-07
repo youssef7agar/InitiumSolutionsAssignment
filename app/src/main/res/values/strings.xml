@@ -7,4 +7,9 @@
     <string name="login_to_your_account">Login to your account</string>
     <string name="menu">menu</string>
     <string name="customer_service">customer service</string>
+    <string name="email_address">Email Address</string>
+    <string name="password">Password</string>
+    <string name="i_would_like_to_save_my_login_credentials_to_this_device">I would like to save my login credentials to this device</string>
+    <string name="did_you_forget_your_password"><u>Did you forget your password?</u></string>
+    <string name="login">Login</string>
 </resources>
