@@ -12,4 +12,13 @@
     <string name="i_would_like_to_save_my_login_credentials_to_this_device">I would like to save my login credentials to this device</string>
     <string name="did_you_forget_your_password"><u>Did you forget your password?</u></string>
     <string name="login">Login</string>
+    <string name="contact_information">Contact \n Information</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="access_information">Access\nInformation</string>
+    <string name="civil_id">Civil ID</string>
+    <string name="retype_password">Retype Password</string>
+    <string name="complete_registrations">Complete Registrations</string>
+    <string name="new_account_registration">New Account Registration</string>
 </resources>
