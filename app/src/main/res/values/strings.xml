@@ -21,4 +21,8 @@
     <string name="retype_password">Retype Password</string>
     <string name="complete_registrations">Complete Registrations</string>
     <string name="new_account_registration">New Account Registration</string>
+    <string name="main_screen">Main Screen</string>
+    <string name="login_to_my_account">Login to my account</string>
+    <string name="register">Register</string>
+    <string name="log_out">Log Out</string>
 </resources>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/nv_main"
+        android:icon="@drawable/ic_baseline_home_35"
+        android:title="@string/main_screen"/>
+
+    <item
+        android:id="@+id/nv_login"
+        android:icon="@drawable/ic_baseline_login_ios_35"
+        android:title="@string/login_to_my_account"/>
+
+    <item
+        android:id="@+id/nv_register"
+        android:icon="@drawable/ic_baseline_register_35"
+        android:title="@string/register"/>
+
+    <item
+        android:id="@+id/nv_logout"
+        android:icon="@drawable/ic_baseline_logout_ios_35"
+        android:title="@string/log_out"/>
+
+</menu>
