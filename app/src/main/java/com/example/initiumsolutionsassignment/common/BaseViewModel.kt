@@ -18,6 +18,10 @@ abstract class BaseViewModel<T> : ViewModel(), CoroutineScope {
 
     val viewState: LiveData<T> get() = _viewState
 
+    fun setState(default: T, block: T.() -> T) {
+        _viewState.postValue(block(_viewState.value ?: default))
+    }
+
     @CallSuper
     override fun onCleared() {
         super.onCleared()

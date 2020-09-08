@@ -50,7 +50,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private var currentFragment = ""
-    private fun showFragment(fragment: Fragment, tag: String) {
+    fun showFragment(fragment: Fragment, tag: String) {
         if (getFragmentByTag(currentFragment) != null) {
             supportFragmentManager.beginTransaction().hide(getFragmentByTag(currentFragment)!!)
                 .commit()
@@ -102,15 +102,6 @@ class MainActivity : AppCompatActivity() {
         fragment?.let { fr ->
             menu_drawer.closeDrawers()
             showFragment(fr, tag ?: "")
-        }
-    }
-
-    companion object {
-        fun start(context: Activity) {
-            val i = Intent(context, MainActivity::class.java)
-            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-            context.startActivity(i)
         }
     }
 

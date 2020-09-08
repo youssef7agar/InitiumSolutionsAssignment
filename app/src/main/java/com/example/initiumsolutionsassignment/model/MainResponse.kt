@@ -1,24 +1,23 @@
 package com.example.initiumsolutionsassignment.model
 
 import com.squareup.moshi.Json
-import java.util.*
 
 data class MainResponse(
     @Json(name = "Collection")
-    val collection: Array<Entity>,
+    val collection: Array<Entity>?,
     @Json(name = "Err_Flag")
-    val errFlag: Boolean,
+    val errFlag: Boolean?,
     @Json(name = "Err_Desc")
-    val errDesc: String
+    val errDesc: String?
 ){
     data class Entity(
         @Json (name= "EntityEnglishName")
-        val entityEnglishName: String,
+        val entityEnglishName: String?,
         @Json (name= "EntityArabicName")
-        val entityArabicName: String,
+        val entityArabicName: String?,
         @Json (name= "EntityLogo")
-        val entityLogo: Base64,
+        val entityLogo: String?,
         @Json (name= "EntityID")
-        val entityID: String
+        val entityID: String?
     )
 }
