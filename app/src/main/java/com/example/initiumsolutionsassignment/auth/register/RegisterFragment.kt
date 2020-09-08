@@ -12,6 +12,7 @@ import com.example.initiumsolutionsassignment.R
 import com.example.initiumsolutionsassignment.main.MainActivity
 import com.example.initiumsolutionsassignment.main.MainFragment
 import com.example.initiumsolutionsassignment.model.RegisterRequest
+import com.example.initiumsolutionsassignment.model.User
 import kotlinx.android.synthetic.main.fragment_register.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
@@ -48,10 +49,15 @@ class RegisterFragment : Fragment() {
                         ).show()
                     }
                     else -> {
+                        viewModel.cacheUser(User(
+                            customerFirstName = it.user?.customerFirstName ?: "",
+                            customerLastName = it.user?.customerLastName ?: "",
+                            customerId = it.user?.customerId
+                        ))
                         val fragment = MainFragment()
                         val bundle = Bundle()
-                        bundle.putString("first name", it.logInResponse?.firstName)
-                        bundle.putString("last name", it.logInResponse?.lastName)
+                        bundle.putString("first name", it.user?.customerFirstName)
+                        bundle.putString("last name", it.user?.customerLastName)
                         fragment.arguments = bundle
                         (activity as MainActivity).showFragment(fragment, "main")
                     }

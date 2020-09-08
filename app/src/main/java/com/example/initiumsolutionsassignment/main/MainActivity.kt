@@ -1,39 +1,54 @@
 package com.example.initiumsolutionsassignment.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.initiumsolutionsassignment.R
 import com.example.initiumsolutionsassignment.auth.login.LogInFragment
 import com.example.initiumsolutionsassignment.auth.register.RegisterFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.androidx.viewmodel.ext.android.viewModel
+
 
 class MainActivity : AppCompatActivity() {
+
+    private val viewModel: MainActivityViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         btnClicks()
 
-        showFragment(MainFragment(), "main")
+        showFragment(MainFragment.newInstance(viewModel.getCachedUser()), "main")
 
         navigation_menu.setNavigationItemSelectedListener {
             navigate(it.itemId)
             return@setNavigationItemSelectedListener true
         }
+
+        val user = viewModel.getCachedUser()
+        if (user != null) {
+            hideItem(R.id.nv_login)
+            hideItem(R.id.nv_register)
+//            tv_menu_header.text = "Welcome, \n ${user.customerFirstName} ${user.customerLastName}"
+        } else {
+            hideItem(R.id.nv_logout)
+        }
     }
 
-    private fun btnClicks(){
+    private fun btnClicks() {
         img_menu.setOnClickListener {
             menu_drawer.openDrawer(GravityCompat.START)
-            hideBar()
+
         }
     }
 
     override fun onBackPressed() {
-        if (menu_drawer.isDrawerOpen(GravityCompat.START)){
-            showBar()
+        if (menu_drawer.isDrawerOpen(GravityCompat.START)) {
+
             menu_drawer.closeDrawers()
             return
         }
@@ -74,27 +89,28 @@ class MainActivity : AppCompatActivity() {
         var tag: String? = null
         when (itemId) {
             R.id.nv_main -> {
-                showBar()
+
                 fragment = MainFragment()
                 tag = "main"
                 menu_drawer.closeDrawers()
             }
             R.id.nv_login -> {
-                showBar()
+
                 fragment = LogInFragment()
                 tag = "login"
                 menu_drawer.closeDrawers()
             }
             R.id.nv_register -> {
-                showBar()
+
                 fragment = RegisterFragment()
                 tag = "register"
                 menu_drawer.closeDrawers()
             }
             R.id.nv_logout -> {
-                showBar()
-                //TODO Logout
+                viewModel.logOut()
                 menu_drawer.closeDrawers()
+                fragment = LogInFragment()
+                tag = "login"
             }
         }
         fragment?.let { fr ->
@@ -102,17 +118,8 @@ class MainActivity : AppCompatActivity() {
             showFragment(fr, tag ?: "")
         }
     }
-
-    private fun showBar(){
-        img_menu.visibility = View.VISIBLE
-        img_call.visibility = View.VISIBLE
-        background_bar.visibility = View.VISIBLE
+    private fun hideItem(itemId: Int) {
+        val navMenu: Menu = navigation_menu.menu
+        navMenu.findItem(itemId).isVisible = false
     }
-
-    private fun hideBar(){
-        img_menu.visibility = View.GONE
-        img_call.visibility = View.GONE
-        background_bar.visibility = View.GONE
-    }
-
 }

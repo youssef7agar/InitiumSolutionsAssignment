@@ -11,32 +11,37 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.initiumsolutionsassignment.R
 import com.example.initiumsolutionsassignment.model.Entity
 import com.example.initiumsolutionsassignment.model.MainResponse
+import com.example.initiumsolutionsassignment.model.User
 import kotlinx.android.synthetic.main.fragment_main.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MainFragment : Fragment() {
+class MainFragment : Fragment(R.layout.fragment_main) {
 
     private val viewModel: MainViewModel by viewModel()
 
     private lateinit var adapter: EntityAdapter
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_main, container, false)
+    override fun onResume() {
+        super.onResume()
+
+        arguments?.getParcelable<User>("user")?.let {
+            btn_login.visibility = View.GONE
+            tv_dont_have_account.visibility = View.GONE
+            tv_register.visibility = View.GONE
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btnClicks()
+
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer {
             it?.let {
@@ -52,7 +57,11 @@ class MainFragment : Fragment() {
                         tv_select_entity.visibility = View.INVISIBLE
                         progress_bar.visibility = View.GONE
                         tv_no_entities.visibility = View.VISIBLE
-                        Toast.makeText(requireContext(), "Something wrong happened", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Something wrong happened",
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                     else -> {
                         rv_entities.visibility = View.VISIBLE
@@ -117,12 +126,21 @@ class MainFragment : Fragment() {
                     R.drawable.ic_baseline_more_horiz_35
                 )?.toBitmap()
             )
-            val newList: MutableList<Entity> = mutableListOf()
-            newList.add(oldList[0])
-            newList.add(oldList[1])
-            newList.add(oldList[2])
-            newList.add(entity)
-            newList
+            oldList.subList(0, 3) + entity
+        }
+    }
+
+    companion object {
+        fun newInstance(firstName: String, lastName: String) = MainFragment().apply {
+            arguments = bundleOf(
+                "user" to User("", firstName, lastName)
+            )
+        }
+
+        fun newInstance(user: User?) = MainFragment().apply {
+            arguments = bundleOf(
+                "user" to user
+            )
         }
     }
 }

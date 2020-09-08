@@ -1,11 +1,9 @@
 package com.example.initiumsolutionsassignment.auth
 
-import com.example.initiumsolutionsassignment.model.LogInResponse
-import java.lang.Exception
+import com.example.initiumsolutionsassignment.model.User
 
 data class AuthViewState(
     val loading: Boolean = false,
     val error: Exception? = null,
-    val logInResponse: LogInResponse? = null
-) {
-}
+    val user: User?=null
+)

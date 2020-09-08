@@ -9,9 +9,9 @@ import kotlinx.coroutines.launch
 class LogInViewModel(private val logInUseCase: LogInUseCase): BaseViewModel<AuthViewState>() {
     override val _viewState = MutableLiveData<AuthViewState>().apply { AuthViewState() }
 
-    fun logIn(logInRequest: LogInRequest) = launch{
+    fun logIn(logInRequest: LogInRequest, rememberMe: Boolean) = launch{
         setState(AuthViewState()) { copy(loading = true)}
-        postState(logInUseCase(logInRequest))
+        postState(logInUseCase(logInRequest, rememberMe))
     }
 
     private fun postState(state: AuthViewState?){

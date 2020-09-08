@@ -8,14 +8,18 @@ import com.google.gson.Gson
 
 interface UserSettings : PreferencesHolder {
     var user: User
-    var isLoggedIn: Boolean
+    val loggedIn: Boolean
+    fun logout()
 }
 
 class UserSettingsImp(private val context: Context, override val gson: Gson) : UserSettings {
     override var user: User by safeObjectPreference("user", User())
-
-    override var isLoggedIn: Boolean = false
+    override val loggedIn: Boolean
         get() = user.customerId != null
+
+    override fun logout() {
+        user = User()
+    }
 
     override val prefs: Lazy<SharedPreferences> = lazy {
         with(context.applicationContext) {

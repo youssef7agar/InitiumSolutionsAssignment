@@ -33,8 +33,9 @@ class LogInFragment : Fragment() {
         btnClicks()
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer {
-            it?.let{
-                when{
+            it?.let {
+                btn_login.isEnabled = true
+                when {
                     it.loading -> {
                         progress_bar.visibility = View.VISIBLE
                         btn_login.isEnabled = false
@@ -48,12 +49,12 @@ class LogInFragment : Fragment() {
                         ).show()
                     }
                     else -> {
-                        val fragment = MainFragment()
-                        val bundle = Bundle()
-                        bundle.putString("first name", it.logInResponse?.firstName)
-                        bundle.putString("last name", it.logInResponse?.lastName)
-                        fragment.arguments = bundle
+                        val fragment = MainFragment.newInstance(
+                            it.user?.customerFirstName ?: "",
+                            it.user?.customerLastName ?: ""
+                        )
                         (activity as MainActivity).showFragment(fragment, "main")
+                        progress_bar.visibility = View.GONE
                     }
                 }
             }
@@ -78,7 +79,8 @@ class LogInFragment : Fragment() {
                     LogInRequest(
                         customerEmail = et_email_address.text.toString(),
                         customerPassword = et_password.text.toString()
-                    )
+                    ),
+                    switch_credentials_saving.isChecked
                 )
             }
         }
