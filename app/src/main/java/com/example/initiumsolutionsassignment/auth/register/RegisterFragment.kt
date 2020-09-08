@@ -1,5 +1,6 @@
 package com.example.initiumsolutionsassignment.auth.register
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +10,8 @@ import androidx.core.text.HtmlCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.initiumsolutionsassignment.R
+import com.example.initiumsolutionsassignment.auth.UserStatus
+import com.example.initiumsolutionsassignment.auth.UserStatusChange
 import com.example.initiumsolutionsassignment.main.MainActivity
 import com.example.initiumsolutionsassignment.main.MainFragment
 import com.example.initiumsolutionsassignment.model.RegisterRequest
@@ -26,6 +29,18 @@ class RegisterFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_register, container, false)
+    }
+
+
+    var statusChangeListener: UserStatusChange? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            statusChangeListener = (parentFragment ?: activity) as UserStatusChange
+        } catch (e: Exception) {
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -49,13 +64,21 @@ class RegisterFragment : Fragment() {
                         ).show()
                     }
                     else -> {
-                        viewModel.cacheUser(User(
-                            customerFirstName = it.user?.customerFirstName ?: "",
-                            customerLastName = it.user?.customerLastName ?: "",
-                            customerId = it.user?.customerId
-                        ))
+                        viewModel.cacheUser(
+                            User(
+                                customerFirstName = it.user?.customerFirstName ?: "",
+                                customerLastName = it.user?.customerLastName ?: "",
+                                customerId = it.user?.customerId
+                            )
+                        )
                         val fragment = MainFragment()
                         val bundle = Bundle()
+                        statusChangeListener?.onStatusChange(
+                            UserStatus.LoggedIn(
+                                it.user?.customerFirstName ?: "",
+                                it.user?.customerLastName ?: ""
+                            )
+                        )
                         bundle.putString("first name", it.user?.customerFirstName)
                         bundle.putString("last name", it.user?.customerLastName)
                         fragment.arguments = bundle

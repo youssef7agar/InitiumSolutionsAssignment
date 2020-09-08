@@ -1,5 +1,6 @@
 package com.example.initiumsolutionsassignment.auth.login
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,6 +9,8 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import com.example.initiumsolutionsassignment.R
+import com.example.initiumsolutionsassignment.auth.UserStatus
+import com.example.initiumsolutionsassignment.auth.UserStatusChange
 import com.example.initiumsolutionsassignment.main.MainActivity
 import com.example.initiumsolutionsassignment.main.MainFragment
 import com.example.initiumsolutionsassignment.model.LogInRequest
@@ -26,6 +29,17 @@ class LogInFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_login, container, false)
+    }
+
+    var statusChangeListener: UserStatusChange? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            statusChangeListener = (parentFragment ?: activity) as UserStatusChange
+        } catch (e: Exception) {
+
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,6 +66,12 @@ class LogInFragment : Fragment() {
                         val fragment = MainFragment.newInstance(
                             it.user?.customerFirstName ?: "",
                             it.user?.customerLastName ?: ""
+                        )
+                        statusChangeListener?.onStatusChange(
+                            UserStatus.LoggedIn(
+                                it.user?.customerFirstName ?: "",
+                                it.user?.customerLastName ?: ""
+                            )
                         )
                         (activity as MainActivity).showFragment(fragment, "main")
                         progress_bar.visibility = View.GONE

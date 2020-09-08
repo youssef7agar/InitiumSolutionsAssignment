@@ -1,5 +1,6 @@
 package com.example.initiumsolutionsassignment.main
 
+import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -13,8 +14,11 @@ import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import com.example.initiumsolutionsassignment.R
+import com.example.initiumsolutionsassignment.auth.UserStatus
+import com.example.initiumsolutionsassignment.auth.UserStatusChange
 import com.example.initiumsolutionsassignment.model.Entity
 import com.example.initiumsolutionsassignment.model.MainResponse
 import com.example.initiumsolutionsassignment.model.User
@@ -25,6 +29,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class MainFragment : Fragment(R.layout.fragment_main) {
 
     private val viewModel: MainViewModel by viewModel()
+
+    interface UserStatusListener{
+        fun statusChange(): LiveData<UserStatus>
+    }
+
+    var userStatusListener: UserStatusListener?=null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        try {
+            userStatusListener = (parentFragment ?: activity) as UserStatusListener
+        } catch (e: Exception) {
+
+        }
+    }
 
     private lateinit var adapter: EntityAdapter
 
@@ -38,11 +57,25 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         }
     }
 
+    val observer: (UserStatus) -> Unit = {
+        when (it) {
+            is UserStatus.LoggedIn -> {
+                btn_login.visibility = View.GONE
+                tv_dont_have_account.visibility = View.GONE
+                tv_register.visibility = View.GONE
+            }
+            UserStatus.LoggedOut -> {
+                btn_login.visibility = View.VISIBLE
+                tv_dont_have_account.visibility = View.VISIBLE
+                tv_register.visibility = View.VISIBLE
+            }
+        }
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         btnClicks()
 
-
+        userStatusListener?.statusChange()?.observe(viewLifecycleOwner, Observer(observer))
         viewModel.viewState.observe(viewLifecycleOwner, Observer {
             it?.let {
                 when {

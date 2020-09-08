@@ -1,20 +1,24 @@
 package com.example.initiumsolutionsassignment.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.GravityCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.example.initiumsolutionsassignment.R
+import com.example.initiumsolutionsassignment.auth.UserStatus
+import com.example.initiumsolutionsassignment.auth.UserStatusChange
 import com.example.initiumsolutionsassignment.auth.login.LogInFragment
 import com.example.initiumsolutionsassignment.auth.register.RegisterFragment
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.nav_header.*
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), UserStatusChange, MainFragment.UserStatusListener {
 
     private val viewModel: MainActivityViewModel by viewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,19 +27,19 @@ class MainActivity : AppCompatActivity() {
         btnClicks()
 
         showFragment(MainFragment.newInstance(viewModel.getCachedUser()), "main")
-
         navigation_menu.setNavigationItemSelectedListener {
             navigate(it.itemId)
             return@setNavigationItemSelectedListener true
         }
 
-        val user = viewModel.getCachedUser()
-        if (user != null) {
+        viewModel.getCachedUser()?.let {
             hideItem(R.id.nv_login)
             hideItem(R.id.nv_register)
-//            tv_menu_header.text = "Welcome, \n ${user.customerFirstName} ${user.customerLastName}"
-        } else {
+
+        } ?: kotlin.run {
             hideItem(R.id.nv_logout)
+            showItem(R.id.nv_login)
+            showItem(R.id.nv_register)
         }
     }
 
@@ -90,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         when (itemId) {
             R.id.nv_main -> {
 
-                fragment = MainFragment()
+                fragment = MainFragment.newInstance(viewModel.getCachedUser())
                 tag = "main"
                 menu_drawer.closeDrawers()
             }
@@ -109,8 +113,8 @@ class MainActivity : AppCompatActivity() {
             R.id.nv_logout -> {
                 viewModel.logOut()
                 menu_drawer.closeDrawers()
-                fragment = LogInFragment()
-                tag = "login"
+                onStatusChange(UserStatus.LoggedOut)
+                fragment = null
             }
         }
         fragment?.let { fr ->
@@ -118,8 +122,39 @@ class MainActivity : AppCompatActivity() {
             showFragment(fr, tag ?: "")
         }
     }
+
     private fun hideItem(itemId: Int) {
         val navMenu: Menu = navigation_menu.menu
         navMenu.findItem(itemId).isVisible = false
+    }
+
+    private fun showItem(itemId: Int) {
+        val navMenu: Menu = navigation_menu.menu
+        navMenu.findItem(itemId).isVisible = true
+    }
+
+    override fun onStatusChange(status: UserStatus) {
+        statusChangeLiveData.value = status
+        navigation_menu.menu.clear()
+        navigation_menu.inflateMenu(R.menu.navigation_menu)
+        when (status) {
+            is UserStatus.LoggedIn -> {
+                hideItem(R.id.nv_login)
+                hideItem(R.id.nv_register)
+                showItem(R.id.nv_logout)
+                tv_menu_header.text = "Welcome, \n ${status.firstName} ${status.lastName}"
+            }
+            UserStatus.LoggedOut -> {
+                showItem(R.id.nv_login)
+                showItem(R.id.nv_register)
+                hideItem(R.id.nv_logout)
+                tv_menu_header.text = null
+            }
+        }
+    }
+
+    private val statusChangeLiveData = MutableLiveData<UserStatus>()
+    override fun statusChange(): LiveData<UserStatus> {
+        return statusChangeLiveData
     }
 }
