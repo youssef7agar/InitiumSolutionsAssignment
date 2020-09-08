@@ -1,6 +1,14 @@
 package com.example.initiumsolutionsassignment.main
 
 import com.example.initiumsolutionsassignment.repository.MainRepo
+import com.example.initiumsolutionsassignment.repository.unwrapResult
 
-class MainUseCase(mainRepo: MainRepo) {
+class MainUseCase(private val repo: MainRepo) {
+    suspend operator fun invoke(): MainViewState {
+        return repo.getMain().unwrapResult({
+            MainViewState(entities = it.collection.toList())
+        }, {
+            MainViewState(error = it)
+        })
+    }
 }

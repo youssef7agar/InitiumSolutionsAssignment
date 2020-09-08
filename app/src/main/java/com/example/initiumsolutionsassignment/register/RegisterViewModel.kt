@@ -2,5 +2,5 @@ package com.example.initiumsolutionsassignment.register
 
 import androidx.lifecycle.ViewModel
 
-class RegisterViewModel: ViewModel() {
+class RegisterViewModel(registerUseCase: RegisterUseCase): ViewModel() {
 }
