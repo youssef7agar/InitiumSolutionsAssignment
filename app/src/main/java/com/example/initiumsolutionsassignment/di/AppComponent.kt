@@ -4,5 +4,6 @@ val appComponent = listOf(
     viewModelModule,
     networkModule,
     repoModule,
-    useCasesModule
+    useCasesModule,
+    commonModule
 )
