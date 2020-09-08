@@ -9,7 +9,7 @@ import com.example.initiumsolutionsassignment.network.LogInApiService
 import com.example.initiumsolutionsassignment.network.RegisterApiService
 import java.lang.Exception
 
-class AuthRepo(private val logInApiService: LogInApiService, private val registerApiService: RegisterApiService, private val userSettings: UserSettings) {
+class AuthRepo(private val logInApiService: LogInApiService, private val registerApiService: RegisterApiService) {
 
     suspend fun logIn(logInRequest: LogInRequest): Result<LogInResponse>{
         return try {

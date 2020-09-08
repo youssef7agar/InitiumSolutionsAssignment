@@ -7,5 +7,5 @@ import org.koin.dsl.bind
 import org.koin.dsl.module
 
 val commonModule = module {
-    single { UserSettingsImp(get(), get()) } bind UserSettings::class bind PreferencesHolder::class
+//    single { UserSettingsImp(get(), get()) } bind UserSettings::class bind PreferencesHolder::class
 }

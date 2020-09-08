@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.graphics.drawable.toBitmap
 import androidx.fragment.app.Fragment
@@ -51,6 +52,7 @@ class MainFragment : Fragment() {
                         tv_select_entity.visibility = View.INVISIBLE
                         progress_bar.visibility = View.GONE
                         tv_no_entities.visibility = View.VISIBLE
+                        Toast.makeText(requireContext(), "Something wrong happened", Toast.LENGTH_SHORT).show()
                     }
                     else -> {
                         rv_entities.visibility = View.VISIBLE
@@ -68,11 +70,9 @@ class MainFragment : Fragment() {
                             fullList.toCollection(fullArrayList)
                             bundle.putParcelableArrayList("list", fullArrayList)
                             fragment.arguments = bundle
-                            Log.d("main", "onViewCreated: HERE")
                             (activity as MainActivity).showFragment(fragment, "others")
                         }
 
-                        Log.d("main", "onViewCreated: HERE2")
                         rv_entities.adapter = adapter
                         adapter.submitList(shortList)
                     }

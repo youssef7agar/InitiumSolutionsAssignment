@@ -1,5 +1,8 @@
 package com.example.initiumsolutionsassignment.repository
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
 /**
  * A generic class that holds a value with its loading status.
  * @param <T>
@@ -24,12 +27,24 @@ fun <T : Any> Result<T>.whenSuccess(block: (data: T) -> Unit): Result<T> {
     return this
 }
 
-
 fun <T : Any> Result<T>.whenFail(block: (Exception) -> Unit): Result<T> {
     if (this is Result.Error) {
         block(this.exception)
     }
     return this
+}
+
+suspend fun <T : Any, R : Any> Result<T>.unwrapSuspendResult(
+    success: suspend (data: T) -> R,
+    error: (Exception) -> R
+): R {
+    return when (this) {
+        is Result.Success -> {
+            success(data)
+        }
+        is Result.Error ->
+            error(exception)
+    }
 }
 
 fun <T : Any, R : Any> Result<T>.unwrapResult(
@@ -44,14 +59,17 @@ fun <T : Any, R : Any> Result<T>.unwrapResult(
     }
 }
 
-fun <T:Any, R:Any> Result<T>.handleResult(success: (data: T) -> R, error: (Exception) -> Exception): Result<R> {
+fun <T : Any, R : Any> Result<T>.handleResult(
+    success: (data: T) -> R,
+    error: (Exception) -> Exception
+): Result<R> {
     return this.unwrapResult({
         Result.Success(
             success(
                 it
             )
         )
-    },{
+    }, {
         Result.Error(error(it))
     })
 }

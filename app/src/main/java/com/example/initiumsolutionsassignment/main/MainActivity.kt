@@ -1,15 +1,13 @@
 package com.example.initiumsolutionsassignment.main
 
-import android.app.Activity
-import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.fragment.app.Fragment
 import com.example.initiumsolutionsassignment.R
-import com.example.initiumsolutionsassignment.login.LogInFragment
-import com.example.initiumsolutionsassignment.register.RegisterFragment
+import com.example.initiumsolutionsassignment.auth.login.LogInFragment
+import com.example.initiumsolutionsassignment.auth.register.RegisterFragment
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
